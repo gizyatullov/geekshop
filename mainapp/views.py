@@ -36,11 +36,11 @@ def main(request):
 def products(request):
     file_path = os.path.join(MODULE_DIR, 'fixtures/goods_products.json')
     links_menu = [
-        {"href": "products_all", "name": "все"},
-        {"href": "products_home", "name": "дом"},
-        {"href": "products_office", "name": "офис"},
-        {"href": "products_modern", "name": "модерн"},
-        {"href": "products_classic", "name": "классика"},
+        {"href": "mainapp:products_all", "name": "все"},
+        {"href": "mainapp:products_home", "name": "дом"},
+        {"href": "mainapp:products_office", "name": "офис"},
+        {"href": "mainapp:products_modern", "name": "модерн"},
+        {"href": "mainapp:products_classic", "name": "классика"},
     ]
 
     # same_products = [
