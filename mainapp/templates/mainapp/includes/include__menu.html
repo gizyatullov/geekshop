@@ -1,32 +1,20 @@
 <div class="header clearfix">
-    <a href="{% url 'mainapp:main' %}" class="logo"></a>
+    <a href="{% url 'main' %}" class="logo"></a>
     <ul class="menu">
 
         <li>
-            <a href="{% url 'mainapp:main' %}"
-                    {% if request.resolver_match.url_name == 'main' %}
-               class="active"
-                    {% endif %}>
-                домой
-            </a>
+            <a class="{% if request.resolver_match.url_name == 'main' %}active{% endif %}"
+               href="{% url 'main' %}">домой</a>
         </li>
 
         <li>
-            <a href="{% url 'mainapp:products' %}"
-                    {% if request.resolver_match.url_name == 'products' %}
-               class="active"
-                    {% endif %}>
-                продукты
-            </a>
+            <a class="{% if request.resolver_match.url_name == 'products' %}active{% endif %}"
+               href="{% url 'products:index' %}">продукты</a>
         </li>
 
         <li>
-            <a href="{% url 'mainapp:contact' %}"
-                    {% if request.resolver_match.url_name == 'contact' %}
-               class="active"
-                    {% endif %}>
-                контакты
-            </a>
+            <a class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}"
+               href="{% url 'contact' %}">контакты</a>
         </li>
     </ul>
     <a class="search" href="#"></a>

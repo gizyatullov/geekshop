@@ -63,14 +63,17 @@
                 <a class="explore" href="#">показать все <img src="{% static 'img/arrow.png' %}" alt=""></a>
             </div>
             <div class="related-products clearfix">
-                {% for same_product in same_products %}
-                    <div class="block">
-                        <a href="#"><img src="{% static 'img/' %}{{ same_product.image_src }}"
-                                         alt="{{ same_product.image_alt }}">
+                {% for product in same_products %}
+                    <div class="block" style="height: 368px; width: 368px;">
+                        <a href="#"><img src="{{ media_url }}{{ product.image }}"
+                                         alt="{{ product.short_description }}">
                             <div class="text">
                                 <img src="{% static 'img/icon-hover.png' %}" alt="img">
-                                <h4>{{ same_product.name }}</h4>
-                                <p>{{ same_product.desc }} </p>
+                                <h3 style="color: aquamarine">Категория: {{ product.category.name }}</h3>
+                                <h4 style="color: palevioletred">Название: {{ product.name }}</h4>
+                                <p style="background-color: beige">Описание: {{ product.description }} </p>
+                                <p style="color: brown">Цена: {{ product.price }} ₽</p>
+                                <p style="font-style: italic">На складе: {{ product.quantity }}</p>
                             </div>
                         </a>
                     </div>
