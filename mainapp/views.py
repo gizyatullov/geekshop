@@ -9,23 +9,6 @@ from .models import Product, ProductCategory
 
 
 def main(request):
-    # products = [
-    #     {
-    #         'name': 'Отличный стул',
-    #         'description': 'Расположитесь комфортно.',
-    #         'img_src': "product-1.jpg",
-    #         'img_href': '/product/1/',
-    #         'alt': 'продукт 1',
-    #     },
-    #     {
-    #         'name': 'Стул повышенного качества',
-    #         'description': 'Не оторваться.',
-    #         'img_src': "product-2.jpg",
-    #         'img_href': '/product/2/',
-    #         'alt': 'продукт 2',
-    #     },
-    # ]
-
     context = {
         'page_title': 'Магазин - Главная',
         'products': Product.objects.all(),

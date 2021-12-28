@@ -31,11 +31,11 @@
             {% for product in products %}
                 <div class="block">
                     <a href="{{ product.image }}"><img src="{{ media_url }}{{ product.image }}"
-                                                          alt="{{ product.short_description }}">
+                                                       alt="{{ product.short_description }}">
                         <div class="text">
-                            <img src="{% static 'img/icon-hover.png' %}" alt="{{ product.short_descriptio }}">
-                            <h4>{{ product.name }}</h4>
-                            <p>{{ product.description }}</p>
+                            <img src="{% static 'img/icon-hover.png' %}" alt="img">
+                            <h4>Название: {{ product.name }}</h4>
+                            <p>Описание: {{ product.description }}</p>
                         </div>
                     </a>
                 </div>

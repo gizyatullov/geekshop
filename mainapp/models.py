@@ -7,6 +7,10 @@ class ProductCategory(models.Model):
     name = models.CharField(max_length=64, verbose_name='название', unique=True)
     description = models.TextField(verbose_name='описание', blank=True)
 
+    class Meta:
+        verbose_name = 'категория товаров'
+        verbose_name_plural = 'категории товаров'
+
     def __str__(self):
         return self.name
 
@@ -19,6 +23,10 @@ class Product(models.Model):
     description = models.TextField(verbose_name='описание', blank=True)
     price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='цена', default=0)
     quantity = models.PositiveIntegerField(verbose_name='количество на складе', default=0)
+
+    class Meta:
+        verbose_name = 'товаров'
+        verbose_name_plural = 'товары'
 
     def __str__(self):
         return f'{self.name} ({self.category.name})'
