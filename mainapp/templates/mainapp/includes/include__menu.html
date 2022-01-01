@@ -16,6 +16,13 @@
             <a class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}"
                href="{% url 'contact' %}">контакты</a>
         </li>
+        {% if user.is_authenticated %}
+            <li>
+                <a href="{% url 'auth:edit' %}">
+                    {{ user.first_name|default:'Пользователь' }}
+                </a>
+            </li>
+        {% endif %}
         <li>
             {% if user.is_authenticated %}
                 <a href="{% url 'auth:logout' %}">выйти</a>
