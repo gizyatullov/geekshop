@@ -1,14 +1,34 @@
 from django.shortcuts import render
+
 from django.utils import timezone
 from django.conf import settings
 
 from .models import Product, ProductCategory
 
-
 # Create your views here.
+
+MODULE_DIR = os.path.dirname(__file__)
 
 
 def main(request):
+    file_path = os.path.join(MODULE_DIR, 'fixtures/goods_index.json')
+    # products = [
+    #     {
+    #         'name': 'Отличный стул',
+    #         'description': 'Расположитесь комфортно.',
+    #         'img_src': "product-1.jpg",
+    #         'img_href': '/product/1/',
+    #         'alt': 'продукт 1',
+    #     },
+    #     {
+    #         'name': 'Стул повышенного качества',
+    #         'description': 'Не оторваться.',
+    #         'img_src': "product-2.jpg",
+    #         'img_href': '/product/2/',
+    #         'alt': 'продукт 2',
+    #     },
+    # ]
+
     context = {
         'page_title': 'Магазин - Главная',
         'products': Product.objects.all(),
