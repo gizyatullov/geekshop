@@ -66,7 +66,7 @@
                 {% for product in same_products %}
                     <div class="block" style="height: 368px; width: 368px;">
                         <a href="#"><img src="{{ media_url }}{{ product.image }}"
-                                         alt="{{ product.short_description }}">
+                                         alt="{{ product.short_desc }}">
                             <div class="text">
                                 <img src="{% static 'img/icon-hover.png' %}" alt="img">
                                 <h3 style="color: aquamarine">Категория: {{ product.category.name }}</h3>
