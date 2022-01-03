@@ -51,3 +51,8 @@
     width: 300px;
     border-radius: 25px;
 }
+
+.errorlist {
+    list-style-type: none;
+    color: red;
+}

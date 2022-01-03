@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import AuthenticationForm, UserChangeForm, UserCreationForm
 from django import forms
+from django.core.exceptions import ValidationError
 
 from .models import ShopUser
 
@@ -15,6 +16,19 @@ class ShopUserLoginForm(AuthenticationForm):
         model = ShopUser
         fields = ('username',
                   'password',)
+
+    # self validators!
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if len(username) > 12:
+            raise ValidationError('Длина логина превышает 12 символов')
+        return username
+
+    def clean_password(self):
+        password = self.cleaned_data['password']
+        if len(password) < 4:
+            raise ValidationError('Длина пароля меньше 4 символов')
+        return password
 
 
 class ShopUserRegisterForm(UserCreationForm):
