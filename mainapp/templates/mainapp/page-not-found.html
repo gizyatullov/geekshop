@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <title>Ошибка! Error.</title>
+    <meta name="description" content="Такой страницы не существует. Начните с главной.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- made by rullan.in.ua -->
+</head>
+<body>
+
+<div class="errorfon">
+    <div class="errorst a-center">
+        <h1>404 <sub>ошибка</sub></h1>
+        <p>{{ page_title }}</p>
+        <a href="{% url 'main' %}">На главную</a>
+        <br>
+        <p style="color: yellow;">{{ exception }}</p>
+    </div>
+</div>
+
+<style>
+    .a-center {
+        text-align: center;
+        vertical-align: baseline;
+    }
+
+    img.a-center, .a-center img, .a-center iframe, .a-center div {
+        clear: both;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .errorfon {
+        background: url(https://shop.boyshns.ru/files/news_imgs/1604052262.jpg) 100% 100% no-repeat;
+        background-size: cover;
+        height: 100%;
+        height: 100vh;
+    }
+
+    .errorst {
+        display: block;
+        width: 900px;
+        background-size: cover;
+        color: #fff;
+        position: absolute;
+        top: 190px;
+        left: 50%;
+        margin-left: -450px;
+    }
+
+    .errorst h1 {
+        font-size: 180px;
+        position: relative;
+        width: 450px;
+        margin: 0 auto;
+    }
+
+    .errorst sub {
+        display: inline-block;
+        font-size: 35px;
+        position: absolute;
+        top: 92px;
+        right: -40px;
+        transform: rotate(-90deg);
+        -webkit-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        font-family: 'Gilroy-ExtraBold', sans-serif;
+    }
+
+    .errorst p {
+        font-size: 18px;
+        text-align: center;
+    }
+
+    .errorst a {
+        width: 200px;
+        margin: 0 auto;
+        font-size: 21px;
+        text-align: center;
+        text-transform: uppercase;
+        color: #fff;
+        display: block;
+        background: #000;
+        padding: 10px 25px 10px 25px;
+    }
+
+    .errorst .bgico-kn_black {
+        display: block;
+        margin: 40px auto 0 auto;
+        padding: 16px 0 0 10px;
+        font-size: 16px;
+    }
+
+    @media (max-width: 1000px) {
+        .errorst {
+            display: block;
+            width: 80%;
+            margin: 0;
+            left: 10%;
+            top: 100px;
+        }
+    }
+
+    @media (max-width: 540px) {
+        .errorst {
+            width: 99.7%;
+            margin: 0;
+            left: 0;
+            top: 90px;
+        }
+
+        .errorst h1 {
+            font-size: 90px;
+            width: 100%;
+            margin: 0;
+        }
+
+        .errorst sub {
+            font-size: 18px;
+            position: absolute;
+            top: 39px;
+            right: 50px;
+        }
+
+        .errorst p {
+            padding: 0 12px 0 12px;
+        }
+    }
+</style>
+</body>
+</html>
