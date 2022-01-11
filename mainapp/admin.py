@@ -11,14 +11,14 @@ class MainappProductAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     list_editable = ('quantity',)
     list_filter = ('quantity', 'category',)
-    prepopulated_fields = {'slug': ('name',), }
+    # prepopulated_fields = {'slug': ('name',)}
 
 
 class MainappProductCategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name',)
     list_display_links = ('id', 'name',)
     search_fields = ('name',)
-    prepopulated_fields = {'slug': ('name',), }
+    # prepopulated_fields = {'slug': ('name',)}
 
 
 class MainappContactAdmin(admin.ModelAdmin):
