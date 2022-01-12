@@ -65,8 +65,10 @@
             <div class="related-products clearfix">
                 {% for product in same_products %}
                     <div class="block" style="height: 368px; width: 368px;">
-                        <a href="#"><img src="{{ media_url }}{{ product.image }}"
-                                         alt="{{ product.short_desc }}">
+                        <a href="{% if user.is_authenticated %}{% url 'basket:add' product.pk %}
+                        {% else %}{% url 'auth:login' %}{% endif %}">
+                            <img src="{{ media_url }}{{ product.image }}"
+                                 alt="{{ product.short_desc }}">
                             <div class="text">
                                 <img src="{% static 'img/icon-hover.png' %}" alt="img">
                                 <h3 style="color: aquamarine">Категория: {{ product.category.name }}</h3>

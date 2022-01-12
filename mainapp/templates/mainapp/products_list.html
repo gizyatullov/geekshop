@@ -4,7 +4,7 @@
 {% block content %}
     <div class="details">
         <div class="links clearfix">
-            {% include "mainapp/includes/include_categories_menu.html" %}
+            {% include "mainapp/includes/include__categories_menu.html" %}
         </div>
 
         <div class="products_list">
@@ -14,17 +14,14 @@
             <div class="category-products clearfix">
                 {% for product in products %}
                     <div class="block">
-                        {% if user.is_authenticated %}
-                            <a href="#"><img src="{{ media_url }}{{ product.image }}" alt="{{ product.short_desc }}">
-                        {% else %}
-                            <a href="{% url 'auth:login' %}">логин</a>
-                        {% endif %}
-                        <img src="{{ media_url }}{{ product.image }}" alt="{{ product.short_desk }}">
-                        <div class="text">
-                            <img src="{% static 'img/icon-hover.png' %}" alt="hover">
-                            <h4>{{ product.name }}</h4>
-                            <p>{{ product.description }} </p>
-                        </div>
+                        <a href="{% if user.is_authenticated %}{% url 'basket:add' product.pk %}
+                        {% else %}{% url 'auth:login' %}{% endif %}">
+                            <img src="{{ media_url }}{{ product.image }}" alt="{{ product.short_desc }}">
+                            <div class="text">
+                                <img src="{% static 'img/icon-hover.png' %}" alt="hover">
+                                <h4>{{ product.name }}</h4>
+                                <p>{{ product.description }} </p>
+                            </div>
                         </a>
                     </div>
                 {% endfor %}
