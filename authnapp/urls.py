@@ -1,8 +1,9 @@
 from django.urls import path
 
+from authnapp.apps import AuthnappConfig
 import authnapp.views as authnapp
 
-app_name = 'authnapp'
+app_name = AuthnappConfig.name
 
 urlpatterns = [
     path('login/', authnapp.login, name='login'),

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-p%cg)vrj=s1qy_doiap05z7(*n1k7jp1@u)r58xmvtf1!3%(i+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 # Application definition
 
@@ -36,8 +36,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mainapp',
-    'authnapp',
+    'mainapp.apps.MainappConfig',
+    'authnapp.apps.AuthnappConfig',
+    'basketapp.apps.BasketappConfig',
 ]
 
 MIDDLEWARE = [
@@ -117,8 +118,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+    Path(BASE_DIR, 'static'),
 )
+
+# STATIC_ROOT = Path(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -132,4 +135,5 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = Path(BASE_DIR, 'media')
 
 # Auth model
+
 AUTH_USER_MODEL = 'authnapp.ShopUser'
