@@ -1,4 +1,5 @@
 from django.shortcuts import render, HttpResponseRedirect, get_object_or_404
+from django.conf import settings
 
 from basketapp.models import Basket
 from mainapp.models import Product
@@ -8,7 +9,13 @@ from mainapp.models import Product
 
 
 def basket(request):
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    context = {
+        'page_title': 'корзина',
+        'basket_items': Basket.objects.filter(user=request.user).order_by('product__category'),
+        'media_url': settings.MEDIA_URL,
+    }
+
+    return render(request, 'basketapp/basket.html', context=context)
 
 
 def basket_add(request, pk):
@@ -24,5 +31,7 @@ def basket_add(request, pk):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-def basket_remove(request):
+def basket_remove(request, pk):
+    basket_record = get_object_or_404(Basket, pk=pk)
+    basket_record.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
