@@ -1445,3 +1445,8 @@ td:first-child {
 .related-products a:hover .text {
     display: block;
 }
+
+.slider-product img {
+    width: 100%;
+}
+
