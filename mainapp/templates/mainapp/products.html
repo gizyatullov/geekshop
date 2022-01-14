@@ -61,7 +61,7 @@
             <div class="related-products clearfix">
                 {% for product in same_products %}
                     <div class="block" style="height: 368px; width: 368px;">
-                        <a href="{% url 'basket:add' product.pk %}">
+                        <a href="{% url 'products:product' product.pk %}">
                             <img src="{{ media_url }}{{ product.image }}"
                                  alt="{{ product.short_desc }}">
                             <div class="text">

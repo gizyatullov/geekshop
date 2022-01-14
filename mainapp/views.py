@@ -82,6 +82,19 @@ def contact(request):
     return render(request, 'mainapp/contact.html', context=context)
 
 
+def product(request, pk):
+    prod = get_object_or_404(Product, pk=pk)
+    context = {
+        'page_title': prod.name,
+        'link_menu': ProductCategory.objects.all(),
+        'product': prod,
+        'basket': get_basket(request.user),
+        'media_url': settings.MEDIA_URL,
+    }
+
+    return render(request, 'mainapp/product.html', context=context)
+
+
 def page_not_found(request, exception):
     context = {
         'exception': exception,
