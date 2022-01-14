@@ -11,6 +11,7 @@ from authnapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEdit
 
 def login(request):
     login_form = ShopUserLoginForm(data=request.POST or None)
+    next_page = request.GET['next'] if 'next' in request.GET.keys() else ''
 
     if request.method == 'POST' and login_form.is_valid():
         username = request.POST['username']
@@ -20,11 +21,14 @@ def login(request):
 
         if user and user.is_active:
             auth.login(request, user)
+            if 'next_page' in request.POST.keys():
+                return HttpResponseRedirect(request.POST['next_page'])
             return HttpResponseRedirect(reverse('main'))
 
     context = {
         'page_title': 'вход',
         'login_form': login_form,
+        'next_page': next_page,
     }
     return render(request, 'authnapp/login.html', context=context)
 
