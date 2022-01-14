@@ -18,12 +18,28 @@ class Basket(models.Model):
         verbose_name_plural = 'корзины пользователей'
         ordering = ('-pk',)
 
+    @property
+    def get_product_cost(self):
+        """
+        return cost of all products this type
+        """
+        product_cost = self.quantity * self.product.price
+        return product_cost
+
+    @property
     def get_total_quantity(self):
+        """
+        return total quantity for user
+        """
         all_baskets = Basket.objects.filter(user=self.user)
         total_quantity = sum(i.quantity for i in all_baskets)
         return total_quantity
 
+    @property
     def get_total_price(self):
+        """
+        return total cost for user
+        """
         all_baskets = Basket.objects.filter(user=self.user)
-        total_price = sum(i.quantity * i.product.price for i in all_baskets)
+        total_price = sum(i.get_product_cost for i in all_baskets)
         return total_price

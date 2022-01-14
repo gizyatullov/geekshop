@@ -137,3 +137,7 @@ MEDIA_ROOT = Path(BASE_DIR, 'media')
 # Auth model
 
 AUTH_USER_MODEL = 'authnapp.ShopUser'
+
+# Login url
+
+LOGIN_URL = 'auth:login'
