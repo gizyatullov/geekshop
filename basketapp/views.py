@@ -66,6 +66,7 @@ def basket_edit(request, pk, quantity):
             'media_url': settings.MEDIA_URL,
         }
 
-        result = render_to_string('basketapp/includes/include__basket_list.html', context=context)
+        # result = render_to_string('basketapp/includes/include__basket_list.html', context=context)
+        basket_summary = render_to_string('basketapp/includes/include__basket_summary.html', context=context)
 
-        return JsonResponse({"result": result})
+        return JsonResponse({"basket_summary": basket_summary})
