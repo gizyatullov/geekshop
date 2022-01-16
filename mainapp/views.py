@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.conf import settings
+import random
 
 from mainapp.models import Product, ProductCategory, Contact
 from basketapp.models import Basket
@@ -18,13 +19,27 @@ def main(request):
     return render(request, 'mainapp/index.html', context=context)
 
 
+def get_basket(user):
+    if user.is_authenticated:
+        return Basket.objects.filter(user=user)
+    else:
+        return []
+
+
+def get_hot_product():
+    all_products = Product.objects.all()
+    return random.sample(list(all_products), 1)[0]
+
+
+def get_same_products(hot_product):
+    same_products = Product.objects.filter(category=hot_product.category).exclude(pk=hot_product.pk)[:3]
+    return same_products
+
+
 def products(request, pk=None):
     page_title = 'Каталог - Продукты'
     links_menu = ProductCategory.objects.all()
-
-    basket = []
-    if request.user.is_authenticated:
-        basket = Basket.objects.filter(user=request.user)
+    basket = get_basket(request.user)
 
     if pk is not None:
         if pk == 0:
@@ -43,17 +58,18 @@ def products(request, pk=None):
         }
         return render(request, 'mainapp/products_list.html', context=context)
 
+    hot_product = get_hot_product()
+    same_products = get_same_products(hot_product)
+
     context = {
         'page_title': page_title,
         'links_menu': links_menu,
-        'same_products': Product.objects.all(),
+        'same_products': same_products,
         'media_url': settings.MEDIA_URL,
         'basket': basket,
+        'hot_product': hot_product,
     }
 
-    if pk:
-        print(f'User select category: {pk} xD')
-        print(basket.get_total_quantity())
     return render(request, 'mainapp/products.html', context=context)
 
 
@@ -64,6 +80,19 @@ def contact(request):
         'locations': Contact.objects.all(),
     }
     return render(request, 'mainapp/contact.html', context=context)
+
+
+def product(request, pk):
+    prod = get_object_or_404(Product, pk=pk)
+    context = {
+        'page_title': prod.name,
+        'link_menu': ProductCategory.objects.all(),
+        'product': prod,
+        'basket': get_basket(request.user),
+        'media_url': settings.MEDIA_URL,
+    }
+
+    return render(request, 'mainapp/product.html', context=context)
 
 
 def page_not_found(request, exception):
