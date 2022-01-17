@@ -69,4 +69,6 @@ def basket_edit(request, pk, quantity):
         # result = render_to_string('basketapp/includes/include__basket_list.html', context=context)
         basket_summary = render_to_string('basketapp/includes/include__basket_summary.html', context=context)
 
-        return JsonResponse({"basket_summary": basket_summary})
+        return JsonResponse({'basket_summary': basket_summary,
+                             'basket_pk': pk,
+                             'value': basket_items.get(pk=pk).get_product_cost})
