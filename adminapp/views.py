@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.conf import settings
+from django.contrib.auth.decorators import user_passes_test
 
 from authnapp.models import ShopUser
 from mainapp.models import ProductCategory, Product
@@ -8,11 +9,13 @@ from mainapp.models import ProductCategory, Product
 # Create your views here.
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def admin_main(request):
     response = redirect('admin:users')
     return response
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def users(request):
     users_list = ShopUser.objects.all().order_by('-is_active', '-is_superuser', '-is_staff', 'username')
 
@@ -40,6 +43,7 @@ def user_delete(request, pk):
     return response
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def categories(request):
     categories_list = ProductCategory.objects.all()
 
@@ -67,6 +71,7 @@ def category_delete(request, pk):
     return response
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def products(request, pk):
     category = get_object_or_404(ProductCategory, pk)
     products_list = Product.objects.filter(category__pk=pk).order_by('name')
