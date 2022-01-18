@@ -1,9 +1,13 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
+from django.urls import reverse
 
 from authnapp.models import ShopUser
 from mainapp.models import ProductCategory, Product
+
+from .forms import ShopUserAdminEditForm
+from .forms import ShopUserRegisterForm
 
 
 # Create your views here.
@@ -29,18 +33,58 @@ def users(request):
 
 
 def user_create(request):
-    response = redirect('admin:users')
-    return response
+    if request.method == 'POST':
+        user_form = ShopUserRegisterForm(request.POST, request.FILES)
+        if user_form.is_valid():
+            user_form.save()
+            return HttpResponseRedirect(reverse('admin:users'))
+    else:
+        user_form = ShopUserRegisterForm()
+
+    context = {
+        'page_title': 'пользователи/создание',
+        'update_form': user_form,
+        'media_url': settings.MEDIA_URL,
+    }
+
+    return render(request, 'admin/user_update.html', context=context)
 
 
 def user_update(request, pk):
-    response = redirect('admin:users')
-    return response
+    edit_user = get_object_or_404(ShopUser, pk=pk)
+
+    if request.method == 'POST':
+        edit_form = ShopUserAdminEditForm(request.POST, request.FILES)
+        if edit_form.is_valid():
+            edit_user.save()
+            return HttpResponseRedirect(reverse('admin:user_update', args=[edit_user.pk]))
+    else:
+        edit_form = ShopUserAdminEditForm(isinstance=edit_user)
+
+    context = {
+        'page_title': 'пользователи/редактирование',
+        'update_form': edit_form,
+        'media_url': settings.MEDIA_URL,
+    }
+
+    return render(request, 'adminapp/user_update.html', context=context)
 
 
 def user_delete(request, pk):
-    response = redirect('admin:users')
-    return response
+    user = get_object_or_404(ShopUser, pk=pk)
+
+    if request.method == 'POST':
+        user.is_active = False
+        user.save()
+        return HttpResponseRedirect(reverse('admin:users'))
+
+    context = {
+        'page_title': 'пользователи/удаление',
+        'user_to_delete': user,
+        'media_url': settings.MEDIA_URL,
+    }
+
+    return render(request, 'admin/user_delete.html', context=context)
 
 
 @user_passes_test(lambda u: u.is_superuser)
