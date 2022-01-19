@@ -1,4 +1,5 @@
 <ul class="menu">
+    <br>
     <li><a href="{% url 'main' %}">на сайт</a></li>
     <li>
         <a class="{% if request.resolver_match.url_name == 'users' %}active{% endif %}" href="{% url 'admin:users' %}">

@@ -1,7 +1,7 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 
 <head>
     <meta charset="utf-8">
@@ -23,19 +23,19 @@
 </head>
 
 <body>
+
 <div class="admin_container">
-    <div class="h2 text-center head">
-        Админка
-    </div>
+    <div class="h2 text-center head">Админка</div>
+
     {% block menu %}
         <div class="admin_menu">
             {% include 'adminapp/includes/include__menu.html' %}
         </div>
-    {% endblock %}
+    {% endblock menu %}
 
 
     {% block content %}
-    {% endblock %}
+    {% endblock content %}
 
 </div>
 </body>
