@@ -19,8 +19,12 @@
                     <button>
                         <a href={% url 'admin:category_update' object.pk %}>редактировать</a>
                     </button>
+                    {#                    <button>#}
+                    {#                        <a href={% url 'admin:category_delete' object.pk %}>удалить</a>#}
+                    {#                    </button>#}
                     <button>
-                        <a href={% url 'admin:category_delete' object.pk %}>удалить</a>
+                        <input class="delete" type="button" name="{{ object.pk }}" value="удалить" }
+                               style="border: none;">
                     </button>
                 </div>
                 <div class="category_desc">
@@ -31,3 +35,8 @@
 
     </div>
 {% endblock content %}
+
+{% block js %}
+    <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+    <script src="{% static 'js/categories_script.js' %}"></script>
+{% endblock js %}

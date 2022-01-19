@@ -1,6 +1,8 @@
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
+from django.template.loader import render_to_string
 from django.urls import reverse
 
 from authnapp.models import ShopUser
@@ -87,7 +89,10 @@ def user_delete(request, pk):
         'media_url': settings.MEDIA_URL,
     }
 
-    return render(request, 'adminapp/user_delete.html', context=context)
+    # return render(request, 'adminapp/user_delete.html', context=context)
+    correction = render_to_string('adminapp/includes/include__user_delete.html', context=context)
+
+    return JsonResponse({'correction': correction})
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -156,7 +161,11 @@ def category_delete(request, pk):
         'category_to_delete': category,
         'media_url': settings.MEDIA_URL,
     }
-    return render(request, 'adminapp/category_delete.html', context=context)
+    # return render(request, 'adminapp/category_delete.html', context=context)
+
+    correction = render_to_string('adminapp/includes/include__category_delete.html', context=context)
+
+    return JsonResponse({'correction': correction})
 
 
 @user_passes_test(lambda u: u.is_superuser)

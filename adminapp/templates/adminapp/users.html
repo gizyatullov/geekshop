@@ -16,10 +16,16 @@
                     <button>
                         <a href={% url 'admin:user_update' object.pk %}>редактировать</a>
                     </button>
+
+                    {#                    <button>#}
+                    {#                        <a href={% url 'admin:user_delete' object.pk %}>удалить</a>#}
+                    {#                    </button>#}
                     <button>
-                        <a href={% url 'admin:user_delete' object.pk %}>удалить</a>
+                        <input class="delete" type="button" name="{{ object.pk }}" value="удалить"
+                               style="border: none;">
                     </button>
                 </div>
+
                 <div class="user_name">
                     <p>
                         <strong>{{ object.username }}</strong>
@@ -49,3 +55,8 @@
         {% endfor %}
     </div>
 {% endblock content %}
+
+{% block js %}
+    <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+    <script src="{% static 'js/user_script.js' %}"></script>
+{% endblock js %}
