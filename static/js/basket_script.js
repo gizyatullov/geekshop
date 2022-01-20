@@ -9,6 +9,7 @@ window.onload = function () {
 
             success: function (data) {
                 $('.basket_summary').html(data.basket_summary);
+                $(`.${data.basket_pk}`).html(`${data.value}&nbsp;&#8381;`);
             },
         });
 

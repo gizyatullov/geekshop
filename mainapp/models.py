@@ -8,6 +8,7 @@ from django.urls import reverse
 class ProductCategory(models.Model):
     name = models.CharField(max_length=64, verbose_name='название', unique=True)
     description = models.TextField(verbose_name='описание', blank=True)
+    is_active = models.BooleanField(verbose_name='категория активна?', default=True)
 
     class Meta:
         verbose_name = 'категория товаров'
