@@ -90,7 +90,7 @@ def user_delete(request, pk):
     }
 
     # return render(request, 'adminapp/user_delete.html', context=context)
-    correction = render_to_string('adminapp/includes/include__user_delete.html', context=context)
+    correction = render_to_string('adminapp/includes/include__user_delete.html', request=request, context=context)
 
     return JsonResponse({'correction': correction})
 
@@ -163,7 +163,7 @@ def category_delete(request, pk):
     }
     # return render(request, 'adminapp/category_delete.html', context=context)
 
-    correction = render_to_string('adminapp/includes/include__category_delete.html', context=context)
+    correction = render_to_string('adminapp/includes/include__category_delete.html', request=request, context=context)
 
     return JsonResponse({'correction': correction})
 
