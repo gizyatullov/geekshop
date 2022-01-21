@@ -8,7 +8,7 @@ from django.urls import reverse
 from authnapp.models import ShopUser
 from mainapp.models import ProductCategory, Product
 
-from .forms import ShopUserAdminEditForm, ProductCategoryEditForm
+from .forms import ShopUserAdminEditForm, ProductCategoryEditForm, ProductEditForm
 from authnapp.forms import ShopUserRegisterForm
 
 
@@ -183,21 +183,76 @@ def products(request, pk):
     return render(request, 'adminapp/products.html', context=context)
 
 
-def product_create(request, pk):
-    response = redirect('admin:categories')
-    return response
-
-
+@user_passes_test(lambda u: u.is_superuser)
 def product_read(request, pk):
-    response = redirect('admin:categories')
-    return response
+    product = get_object_or_404(Product, pk=pk)
+
+    context = {
+        'page_title': 'продукт/подробнее',
+        'object': product,
+        'media_url': settings.MEDIA_URL,
+    }
+
+    return render(request, 'adminapp/product_read.html', context=context)
 
 
+@user_passes_test(lambda u: u.is_superuser)
+def product_create(request, pk):
+    category = get_object_or_404(ProductCategory, pk=pk)
+
+    if request.method == 'POST':
+        product_form = ProductEditForm(request.POST, request.FILES)
+        if product_form.is_valid():
+            product_form.save()
+            return HttpResponseRedirect(reverse('admin:products', args=[pk]))
+    else:
+        product_form = ProductEditForm(initial={'category': category})
+
+    context = {
+        'page_title': 'продукт/создание',
+        'update_form': product_form,
+        'category': category,
+        'media_url': settings.MEDIA_URL,
+    }
+
+    return render(request, 'adminapp/product_update.html', context=context)
+
+
+@user_passes_test(lambda u: u.is_superuser)
 def product_update(request, pk):
-    response = redirect('admin:categories')
-    return response
+    edit_product = get_object_or_404(Product, pk=pk)
+
+    if request.method == 'POST':
+        edit_form = ProductEditForm(request.POST, request.FILES, instance=edit_product)
+        if edit_form.is_valid():
+            edit_form.save()
+            return HttpResponseRedirect(reverse('admin:product_update', args=[edit_product.pk]))
+    else:
+        edit_form = ProductEditForm(instance=edit_product)
+
+    context = {
+        'page_title': 'продукт/редактирование',
+        'update_form': edit_form,
+        'category': edit_product.category,
+        'media_url': settings.MEDIA_URL,
+    }
+
+    return render(request, 'adminapp/product_update.html', context=context)
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def product_delete(request, pk):
-    response = redirect('admin:categories')
-    return response
+    product = get_object_or_404(Product, pk=pk)
+
+    if request.method == 'POST':
+        product.is_active = False
+        product.save()
+        return HttpResponseRedirect(reverse('admin:products', args=[product.category.pk]))
+
+    context = {
+        'page_title': 'продукт/удаление',
+        'product_to_delete': product,
+        'media_url': settings.MEDIA_URL,
+    }
+
+    return render(request, 'adminapp/product_delete.html', context=context)

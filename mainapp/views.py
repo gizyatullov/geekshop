@@ -3,6 +3,8 @@ from django.utils import timezone
 from django.conf import settings
 import random
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 from mainapp.models import Product, ProductCategory, Contact
 from basketapp.models import Basket
 
@@ -36,7 +38,7 @@ def get_same_products(hot_product):
     return same_products
 
 
-def products(request, pk=None):
+def products(request, pk=None, page=1):
     page_title = 'Каталог - Продукты'
     links_menu = ProductCategory.objects.all()
     basket = get_basket(request.user)
@@ -48,14 +50,25 @@ def products(request, pk=None):
         else:
             category = get_object_or_404(ProductCategory, pk=pk)
             products = Product.objects.filter(category__pk=pk).order_by('price')
+
+        paginator = Paginator(products, 2)
+
+        try:
+            products_paginator = paginator.page(page)
+        except PageNotAnInteger:
+            products_paginator = paginator.page(1)
+        except EmptyPage:
+            products_paginator = paginator.page(paginator.num_pages)
+
         context = {
             'page_title': page_title,
             'links_menu': links_menu,
             'category': category,
-            'products': products,
+            'products': products_paginator,
             'media_url': settings.MEDIA_URL,
             'basket': basket,
         }
+
         return render(request, 'mainapp/products_list.html', context=context)
 
     hot_product = get_hot_product()
