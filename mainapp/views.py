@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.conf import settings
 import random
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from mainapp.models import Product, ProductCategory, Contact
 from basketapp.models import Basket
@@ -18,6 +18,7 @@ def main(request):
         'products': Product.objects.all()[:4],
         'media_url': settings.MEDIA_URL,
     }
+
     return render(request, 'mainapp/index.html', context=context)
 
 
@@ -29,27 +30,28 @@ def get_basket(user):
 
 
 def get_hot_product():
-    all_products = Product.objects.all()
+    all_products = Product.objects.filter(is_active=True, category__is_active=True)
     return random.sample(list(all_products), 1)[0]
 
 
 def get_same_products(hot_product):
-    same_products = Product.objects.filter(category=hot_product.category).exclude(pk=hot_product.pk)[:3]
+    same_products = Product.objects.filter(category=hot_product.category, is_active=True).exclude(pk=hot_product.pk)[:3]
     return same_products
 
 
 def products(request, pk=None, page=1):
     page_title = 'Каталог - Продукты'
-    links_menu = ProductCategory.objects.all()
+    links_menu = ProductCategory.objects.filter(is_active=True)
     basket = get_basket(request.user)
 
     if pk is not None:
         if pk == 0:
-            products = Product.objects.all().order_by('price')
-            category = {'name': 'все'}
+            products = Product.objects.filter(is_active=True, category__is_active=True).order_by('price')
+            category = {'name': 'все', 'pk': 0}
         else:
             category = get_object_or_404(ProductCategory, pk=pk)
-            products = Product.objects.filter(category__pk=pk).order_by('price')
+            products = Product.objects.filter(category__pk=pk, is_active=True, category__is_active=True).order_by(
+                'price')
 
         paginator = Paginator(products, 2)
 
@@ -86,15 +88,6 @@ def products(request, pk=None, page=1):
     return render(request, 'mainapp/products.html', context=context)
 
 
-def contact(request):
-    context = {
-        'page_title': 'Контакты - О нас',
-        'visit_date': timezone.now(),
-        'locations': Contact.objects.all(),
-    }
-    return render(request, 'mainapp/contact.html', context=context)
-
-
 def product(request, pk):
     prod = get_object_or_404(Product, pk=pk)
     context = {
@@ -106,6 +99,15 @@ def product(request, pk):
     }
 
     return render(request, 'mainapp/product.html', context=context)
+
+
+def contact(request):
+    context = {
+        'page_title': 'Контакты - О нас',
+        'visit_date': timezone.now(),
+        'locations': Contact.objects.all(),
+    }
+    return render(request, 'mainapp/contact.html', context=context)
 
 
 def page_not_found(request, exception):
