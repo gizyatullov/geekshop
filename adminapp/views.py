@@ -3,7 +3,11 @@ from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRe
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
 from django.template.loader import render_to_string
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.list import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from authnapp.models import ShopUser
 from mainapp.models import ProductCategory, Product
@@ -19,6 +23,11 @@ from authnapp.forms import ShopUserRegisterForm
 def admin_main(request):
     response = redirect('admin:users')
     return response
+
+
+class UsersListView(LoginRequiredMixin, ListView):
+    model = ShopUser
+    template_name = 'adminapp/users.html'
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -108,6 +117,13 @@ def categories(request):
     return render(request, 'adminapp/categories.html', context=context)
 
 
+class ProductCategoryCreateView(LoginRequiredMixin, CreateView):
+    model = ProductCategory
+    template_name = 'adminapp/category_update.html'
+    success_url = reverse_lazy('admin:categories')
+    fields = '__all__'
+
+
 @user_passes_test(lambda u: u.is_superuser)
 def category_create(request):
     if request.method == 'POST':
@@ -124,6 +140,18 @@ def category_create(request):
         'media_url': settings.MEDIA_URL,
     }
     return render(request, 'adminapp/category_update.html', context=context)
+
+
+class ProductCategoryUpdateView(LoginRequiredMixin, UpdateView):
+    model = ProductCategory
+    template_name = 'adminapp/category_update.html'
+    success_url = reverse_lazy('admin:categories')
+    fields = '__all__'
+
+    def get_context_data(self, **kwargs):
+        context = super(ProductCategoryUpdateView, self).get_context_data(**kwargs)
+        context['page_title'] = 'категории/редактирование'
+        return context
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -147,6 +175,22 @@ def category_update(request, pk):
     return render(request, 'adminapp/category_update.html', context=context)
 
 
+class ProductCategoryDeleteView(LoginRequiredMixin, DeleteView):
+    model = ProductCategory
+    template_name = 'adminapp/category_delete.html'
+    success_url = reverse_lazy('admin:categories')
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.object = None
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_active = False
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+
 @user_passes_test(lambda u: u.is_superuser)
 def category_delete(request, pk):
     category = get_object_or_404(ProductCategory, pk=pk)
@@ -161,11 +205,11 @@ def category_delete(request, pk):
         'category_to_delete': category,
         'media_url': settings.MEDIA_URL,
     }
-    # return render(request, 'adminapp/category_delete.html', context=context)
+    return render(request, 'adminapp/category_delete.html', context=context)
 
-    correction = render_to_string('adminapp/includes/include__category_delete.html', request=request, context=context)
-
-    return JsonResponse({'correction': correction})
+    # correction = render_to_string('adminapp/includes/include__category_delete.html', request=request, context=context)
+    #
+    # return JsonResponse({'correction': correction})
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -181,6 +225,11 @@ def products(request, pk):
     }
 
     return render(request, 'adminapp/products.html', context=context)
+
+
+class ProductDetailView(LoginRequiredMixin, DetailView):
+    model = Product
+    template_name = 'adminapp/product_read.html'
 
 
 @user_passes_test(lambda u: u.is_superuser)
