@@ -9,8 +9,8 @@
             {{ form.as_p }}
             <input class="form-control" type="submit" value="сохранить">
         </form>
-        <a class="btn btn-outline-secondary btn-block my-3" href="{% url 'admin:categories' %}" role="button">
-            к списку категорий
+        <a class="btn btn-outline-secondary btn-block my-3" href="{% url 'admin:products' object.pk %}" role="button">
+            к списку продуктов
         </a>
     </div>
-{% endblock content %}
+{% endblock %}

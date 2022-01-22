@@ -1,7 +1,5 @@
 from django.db import models
 
-from django.urls import reverse
-
 
 # Create your models here.
 
@@ -27,6 +25,7 @@ class Product(models.Model):
     description = models.TextField(verbose_name='описание', blank=True)
     price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='цена', default=0)
     quantity = models.PositiveIntegerField(verbose_name='количество на складе', default=0)
+    is_active = models.BooleanField(verbose_name="продукт активен", default=True)
 
     class Meta:
         verbose_name = 'товаров'
@@ -35,9 +34,6 @@ class Product(models.Model):
 
     def __str__(self):
         return f'{self.name} ({self.category.name})'
-
-    def get_absolute_url(self):
-        return reverse('products:index')
 
 
 class Contact(models.Model):

@@ -1,13 +1,13 @@
 {% extends 'mainapp/base.html' %}
 {% load static %}
-
-{% block page_title %}{{ page_title|upper }}{% endblock page_title %}
+{% load my_filter_tags %}
 
 {% block menu %}
     <div class="hero">
         {% include 'mainapp/includes/include__menu.html' %}
         <h1>наши контакты</h1>
         <p>сегодня: {% now "l, j F, Y" %}</p>
+        <p>сегодня: {{ visit_date|date:"l, j F, Y" }}</p>
     </div>
 {% endblock menu %}
 
@@ -19,11 +19,11 @@
                 <h4>{{ location.city }}</h4>
                 <div class="contacts">
                     <h5>Телефон</h5>
-                    <p>{{ location.phone }}</p>
+                    <p>{{ location.phone|tel }}</p>
                 </div>
                 <div class="contacts">
                     <h5>Email</h5>
-                    <p>{{ location.email }}</p>
+                    <p>{{ location.email|mail_to }}</p>
                 </div>
                 <div class="contacts">
                     <h5>Адрес</h5>

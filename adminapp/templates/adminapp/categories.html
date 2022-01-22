@@ -7,7 +7,7 @@
             <a href={% url 'admin:category_create' %}>новая категория</a>
         </button>
 
-        {% for object in objects %}
+        {% for object in object_list %}
             <div class="category_record {% if not object.is_active %}not_active{% endif %}">
                 <div class="category_name">
                     {{ object.name|title }}
@@ -19,13 +19,13 @@
                     <button>
                         <a href={% url 'admin:category_update' object.pk %}>редактировать</a>
                     </button>
-                    {#                    <button>#}
-                    {#                        <a href={% url 'admin:category_delete' object.pk %}>удалить</a>#}
-                    {#                    </button>#}
                     <button>
-                        <input class="delete" type="button" name="{{ object.pk }}" value="удалить" }
-                               style="border: none;">
+                        <a href={% url 'admin:category_delete' object.pk %}>удалить</a>
                     </button>
+                    {#                    <button>#}
+                    {#                        <input class="delete" type="button" name="{{ object.pk }}" value="удалить" }#}
+                    {#                               style="border: none;">#}
+                    {#                    </button>#}
                 </div>
                 <div class="category_desc">
                     {{ object.description|title }}
@@ -36,7 +36,7 @@
     </div>
 {% endblock content %}
 
-{% block js %}
-    <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
-    <script src="{% static 'js/categories_script.js' %}"></script>
-{% endblock js %}
+{#{% block js %}#}
+{#    <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>#}
+{#    <script src="{% static 'js/categories_script.js' %}"></script>#}
+{#{% endblock js %}#}
