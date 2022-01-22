@@ -1,5 +1,6 @@
 {% extends "mainapp/products.html" %}
 {% load static %}
+{% load my_filter_tags %}
 
 {% block content %}
     <div class="details">
@@ -27,7 +28,7 @@
                     <div class="block">
                         <a href="{% if user.is_authenticated %}{% url 'products:product' product.pk %}
                         {% else %}{% url 'auth:login' %}{% endif %}">
-                            <img src="{{ media_url }}{{ product.image }}" alt="{{ product.short_desc }}">
+                            <img src="{{ product.image|mfp }}" alt="{{ product.short_desc }}">
                             <div class="text">
                                 <img src="{% static 'img/icon-hover.png' %}" alt="hover">
                                 <h4>{{ product.name }}</h4>

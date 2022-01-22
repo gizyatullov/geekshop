@@ -6,10 +6,10 @@
     <div class="new_category_form">
         <form class="form-horizontal" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ update_form.as_p }}
+            {{ form.as_p }}
             <input class="form-control" type="submit" value="сохранить">
         </form>
-        <a class="btn btn-outline-secondary btn-block my-3" href="{% url 'admin:products' category.pk %}" role="button">
+        <a class="btn btn-outline-secondary btn-block my-3" href="{% url 'admin:products' object.pk %}" role="button">
             к списку продуктов
         </a>
     </div>

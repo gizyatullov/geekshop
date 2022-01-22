@@ -6,10 +6,24 @@
 {% block content %}
     <div class="products_list">
         <button class="new_product">
-            <a href={% url 'admin:product_create' category.pk %}>новый продукт</a>
+            <a href={% url 'admin:product_create' object.pk %}>новый продукт</a>
         </button>
 
-        {% for object in objects %}
+        <div class="paginator">
+            {% if object_list.has_previous %}
+                <a href="{% url 'admin:page_products' object.pk object_list.previous_page_number %}"><i
+                        class="fas fa-chevron-circle-left"></i></a>
+            {% endif %}
+            <span class="current">
+                    страница {{ object_list.number }} из {{ object_list.paginator.num_pages }}
+                </span>
+            {% if object_list.has_next %}
+                <a href="{% url 'admin:page_products' object.pk object_list.next_page_number %}"><i
+                        class="fas fa-chevron-circle-right"></i></a>
+            {% endif %}
+        </div>
+
+        {% for object in object_list %}
             <div class="product_record {% if not object.is_active %}not_active{% endif %}">
                 <img src="{{ object.image|mfp }}"
                      alt="{{ object.name }}">
