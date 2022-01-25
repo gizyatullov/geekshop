@@ -42,7 +42,6 @@ def get_same_products(hot_product):
 def products(request, pk=None, page=1):
     page_title = 'Каталог - Продукты'
     links_menu = ProductCategory.objects.filter(is_active=True)
-    basket = get_basket(request.user)
 
     if pk is not None:
         if pk == '0':
@@ -68,7 +67,6 @@ def products(request, pk=None, page=1):
             'category': category,
             'products': products_paginator,
             'media_url': settings.MEDIA_URL,
-            'basket': basket,
         }
 
         return render(request, 'mainapp/products_list.html', context=context)
@@ -81,7 +79,6 @@ def products(request, pk=None, page=1):
         'links_menu': links_menu,
         'same_products': same_products,
         'media_url': settings.MEDIA_URL,
-        'basket': basket,
         'hot_product': hot_product,
     }
 
