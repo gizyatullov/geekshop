@@ -15,7 +15,7 @@ from basketapp.models import Basket
 def main(request):
     context = {
         'page_title': 'Магазин - Главная',
-        'products': Product.objects.all()[:4],
+        'products': Product.objects.filter(is_active=True, category__is_active=True)[:3],
         'media_url': settings.MEDIA_URL,
     }
 
@@ -45,7 +45,7 @@ def products(request, pk=None, page=1):
     basket = get_basket(request.user)
 
     if pk is not None:
-        if pk == 0:
+        if pk == '0':
             products = Product.objects.filter(is_active=True, category__is_active=True).order_by('price')
             category = {'name': 'все', 'pk': 0}
         else:
