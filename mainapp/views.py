@@ -1,12 +1,12 @@
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.conf import settings
-import random
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.views.generic import ListView
 
 from mainapp.models import Product, ProductCategory, Contact
-from basketapp.models import Basket
+from .services import get_hot_product, get_same_products
 
 
 # Create your views here.
@@ -22,21 +22,31 @@ def main(request):
     return render(request, 'mainapp/index.html', context=context)
 
 
-def get_basket(user):
-    if user.is_authenticated:
-        return Basket.objects.filter(user=user)
-    else:
-        return []
+class ProductsListView(ListView):
+    model = Product
+    template_name = 'mainapp/products_list.html'
+    paginate_by = 2
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        category_pk = self.kwargs.get('pk')
+        if not category_pk == 0:
+            queryset = queryset.filter(category__pk=category_pk)
+        return queryset
 
-def get_hot_product():
-    all_products = Product.objects.filter(is_active=True, category__is_active=True)
-    return random.sample(list(all_products), 1)[0]
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        category_pk = self.kwargs.get('pk')
+        # hot_product = get_hot_product()
 
+        context['page_title'] = 'Каталог - Продукты'
+        context['links_menu'] = ProductCategory.objects.filter(is_active=True)
+        context['category'] = get_object_or_404(ProductCategory, pk=category_pk)
+        context['media_url'] = settings.MEDIA_URL
+        # context['same_products'] = get_same_products(hot_product)
+        # context['hot_product'] = hot_product
 
-def get_same_products(hot_product):
-    same_products = Product.objects.filter(category=hot_product.category, is_active=True).exclude(pk=hot_product.pk)[:3]
-    return same_products
+        return context
 
 
 def products(request, pk=None, page=1):
@@ -91,7 +101,6 @@ def product(request, pk):
         'page_title': prod.name,
         'link_menu': ProductCategory.objects.all(),
         'product': prod,
-        'basket': get_basket(request.user),
         'media_url': settings.MEDIA_URL,
     }
 

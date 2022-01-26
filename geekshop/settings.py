@@ -13,8 +13,15 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os.path
 
+# from dotenv import load_dotenv
+import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# env variables
+# dot_env = Path(BASE_DIR, '.env')
+# load_dotenv(dotenv_path=dot_env)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -24,6 +31,7 @@ SECRET_KEY = 'django-insecure-p%cg)vrj=s1qy_doiap05z7(*n1k7jp1@u)r58xmvtf1!3%(i+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# DEBUG = (os.getenv('DEBUG', 'False') == 'True')
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
@@ -115,7 +123,7 @@ else:
 
 LANGUAGE_CODE = 'ru-ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -163,7 +171,9 @@ DOMAIN_NAME = 'http://localhost:8000'
 #   https://docs.djangoproject.com/en/3.2/topics/email/
 
 EMAIL_HOST = 'localhost'
+# EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_PORT = '25'
+# EMAIL_PORT = os.getenv('EMAIL_PORT')
 
 EMAIL_USE_SSL = False
 # If server support TLS:
@@ -178,3 +188,5 @@ EMAIL_HOST_PASSWORD = None
 # Email as files
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = 'temp/email-messages/'
+
+BASE_URL = 'http://localhost:8000'
