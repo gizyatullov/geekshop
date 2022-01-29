@@ -3,8 +3,9 @@ from django.contrib import auth
 from django.urls import reverse
 from django.conf import settings
 from django.contrib import messages
+from django.db import transaction
 
-from authnapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEditForm
+from authnapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEditForm, ShopUserProfileEditForm
 from .models import ShopUser
 from .services import send_verify_mail
 
@@ -43,9 +44,9 @@ def logout(request):
 
 def register(request):
     message = 'Сообщение для подтверждения регистрации отправлено Вам на электронную почту указанную при регистрации!'
+
     if request.method == 'POST':
         register_form = ShopUserRegisterForm(request.POST, request.FILES)
-
         if register_form.is_valid():
             user = register_form.save()
             if send_verify_mail(user):
@@ -65,19 +66,23 @@ def register(request):
     return render(request, 'authnapp/register.html', context=context)
 
 
+@transaction.atomic
 def edit(request):
     if request.method == 'POST':
         edit_form = ShopUserEditForm(request.POST, request.FILES, instance=request.user)
+        profile_form = ShopUserProfileEditForm(request.POST, instance=request.user.shopuserprofile)
 
-        if edit_form.is_valid():
+        if edit_form.is_valid() and profile_form.is_valid():
             edit_form.save()
             return HttpResponseRedirect(reverse('auth:edit'))
     else:
         edit_form = ShopUserEditForm(instance=request.user)
+        profile_form = ShopUserProfileEditForm(instance=request.user.shopuserprofile)
 
     context = {
         'page_title': 'редактирование',
         'edit_form': edit_form,
+        'profile_form': profile_form,
         'media_url': settings.MEDIA_URL,
     }
 
