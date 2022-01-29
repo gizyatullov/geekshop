@@ -11,9 +11,9 @@ from django.conf import settings
 
 
 class ShopUser(AbstractUser):
-    email = models.EmailField(verbose_name='email')
+    email = models.EmailField(verbose_name='email', unique=True, db_index=True)
     avatar = models.ImageField(upload_to="users_avatars", blank=True)
-    age = models.PositiveSmallIntegerField(verbose_name="возраст")
+    age = models.PositiveSmallIntegerField(verbose_name="возраст", default=99)
     activation_key = models.CharField(max_length=128, null=True, blank=True, verbose_name='ключ подтверждения')
     activation_key_expires = models.DateTimeField(null=True, blank=True, verbose_name='актуальность ключа')
 

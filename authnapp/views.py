@@ -96,11 +96,14 @@ def verify(request, email, activation_key):
             # user.activation_key_expires = None
             # user.save()
             user.activate_user()
-            auth.login(request, user)
+            auth.login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+
+            return render(request, 'authnapp/verification.html')
 
         print(f'error activation user: {user}')
+        return render(request, 'authnapp/verification.html')
 
     except Exception as e:
         print(f'error activation user: {e.args}')
 
-    return render(request, 'authnapp/verification.html')
+    return HttpResponseRedirect(reverse('main'))
