@@ -29,5 +29,8 @@
     <a class="btn btn-outline-secondary btn-block" href="{% url 'social:begin' 'github' %}?next=/" role="button">
         Вход через <i class="fa fa-github" aria-hidden="true"></i>
     </a>
-
+    <a class="btn btn-outline-secondary btn-block" href="{% url 'social:begin' 'vk-oauth2' %}?next=/" role="button">
+        Вход через <i class="fa fa-vk" aria-hidden="true"></i>
+    </a>
+    <br>
 {% endblock content %}

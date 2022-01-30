@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'authnapp.apps.AuthnappConfig',
     'basketapp.apps.BasketappConfig',
     'adminapp.apps.AdminappConfig',
-    'social_django',
+    'social_django.apps.PythonSocialAuthConfig',
 ]
 
 MIDDLEWARE = [
@@ -90,6 +90,7 @@ TEMPLATES = [
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.vk.VKOAuth2',
 )
 
 WSGI_APPLICATION = 'geekshop.wsgi.application'
@@ -100,7 +101,7 @@ WSGI_APPLICATION = 'geekshop.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': Path(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -155,13 +156,10 @@ STATICFILES_DIRS = (
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Media files
-
 MEDIA_URL = '/media/'
-
 MEDIA_ROOT = Path(BASE_DIR, 'media')
 
 # Auth model
-
 AUTH_USER_MODEL = 'authnapp.ShopUser'
 
 # Login url
@@ -171,7 +169,6 @@ AUTH_USER_MODEL = 'authnapp.ShopUser'
 LOGIN_URL = 'auth:login'
 
 # mail
-
 DOMAIN_NAME = 'http://localhost:8000'
 
 # Read about sending email:
@@ -196,5 +193,13 @@ EMAIL_FILE_PATH = 'temp/email-messages/'
 
 BASE_URL = 'http://localhost:8000'
 
-SOCIAL_AUTH_GITHUB_KEY = env.get('client_id')
-SOCIAL_AUTH_GITHUB_SECRET = env.get('client_secret')
+# Auth to GitHub
+# SOCIAL_AUTH_GITHUB_KEY = env.get('github_client_id')
+SOCIAL_AUTH_GITHUB_KEY = env['github_client_id']
+SOCIAL_AUTH_GITHUB_SECRET = env.get('github_client_secret')
+
+# Auth to VK
+SOCIAL_AUTH_VK_OAUTH2_KEY = env.get('vk_client_id')
+SOCIAL_AUTH_VK_OAUTH2_SECRET = env.get('vk_client_id')
+
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
