@@ -13,15 +13,15 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os.path
 
-# from dotenv import load_dotenv
-import os
+import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # env variables
-# dot_env = Path(BASE_DIR, '.env')
-# load_dotenv(dotenv_path=dot_env)
+path_env = Path(BASE_DIR, 'env.json')
+with open(file=path_env, encoding='utf-8') as f:
+    env = json.load(f)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -31,7 +31,6 @@ SECRET_KEY = 'django-insecure-p%cg)vrj=s1qy_doiap05z7(*n1k7jp1@u)r58xmvtf1!3%(i+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-# DEBUG = (os.getenv('DEBUG', 'False') == 'True')
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
@@ -54,6 +53,7 @@ INSTALLED_APPS = [
     'authnapp.apps.AuthnappConfig',
     'basketapp.apps.BasketappConfig',
     'adminapp.apps.AdminappConfig',
+    'social_django.apps.PythonSocialAuthConfig',
 ]
 
 MIDDLEWARE = [
@@ -80,10 +80,18 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'mainapp.context_processors.basket',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.vk.VKOAuth2',
+)
 
 WSGI_APPLICATION = 'geekshop.wsgi.application'
 
@@ -93,7 +101,7 @@ WSGI_APPLICATION = 'geekshop.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': Path(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -148,13 +156,10 @@ STATICFILES_DIRS = (
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Media files
-
 MEDIA_URL = '/media/'
-
 MEDIA_ROOT = Path(BASE_DIR, 'media')
 
 # Auth model
-
 AUTH_USER_MODEL = 'authnapp.ShopUser'
 
 # Login url
@@ -164,16 +169,13 @@ AUTH_USER_MODEL = 'authnapp.ShopUser'
 LOGIN_URL = 'auth:login'
 
 # mail
-
 DOMAIN_NAME = 'http://localhost:8000'
 
 # Read about sending email:
 #   https://docs.djangoproject.com/en/3.2/topics/email/
 
 EMAIL_HOST = 'localhost'
-# EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_PORT = '25'
-# EMAIL_PORT = os.getenv('EMAIL_PORT')
 
 EMAIL_USE_SSL = False
 # If server support TLS:
@@ -190,3 +192,14 @@ EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = 'temp/email-messages/'
 
 BASE_URL = 'http://localhost:8000'
+
+# Auth to GitHub
+# SOCIAL_AUTH_GITHUB_KEY = env.get('github_client_id')
+SOCIAL_AUTH_GITHUB_KEY = env['github_client_id']
+SOCIAL_AUTH_GITHUB_SECRET = env.get('github_client_secret')
+
+# Auth to VK
+SOCIAL_AUTH_VK_OAUTH2_KEY = env.get('vk_client_id')
+SOCIAL_AUTH_VK_OAUTH2_SECRET = env.get('vk_client_id')
+
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
