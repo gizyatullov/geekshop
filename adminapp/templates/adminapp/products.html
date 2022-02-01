@@ -16,7 +16,7 @@
             {% endif %}
             <span class="current">
                     страница {{ object_list.number }} из {{ object_list.paginator.num_pages }}
-                </span>
+            </span>
             {% if object_list.has_next %}
                 <a href="{% url 'admin:page_products' object.pk object_list.next_page_number %}"><i
                         class="fas fa-chevron-circle-right"></i></a>

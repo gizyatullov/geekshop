@@ -3,6 +3,16 @@
 
 {% block content %}
 
+    {% if messages %}
+        <ul class="messages" style="background-color: yellow;">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">
+                    {{ message|safe }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
     <form class="form-horizontal" action="{% url 'auth:login' %}" method="post">
         {% csrf_token %}
         {% if next_page %}
@@ -16,5 +26,11 @@
     <button class="btn btn-round form-control">
         <a class="" href="{% url 'auth:register' %}">зарегистрироваться</a>
     </button>
-
+    <a class="btn btn-outline-secondary btn-block" href="{% url 'social:begin' 'github' %}?next=/" role="button">
+        Вход через <i class="fa fa-github" aria-hidden="true"></i>
+    </a>
+    <a class="btn btn-outline-secondary btn-block" href="{% url 'social:begin' 'vk-oauth2' %}?next=/" role="button">
+        Вход через <i class="fa fa-vk" aria-hidden="true"></i>
+    </a>
+    <br>
 {% endblock content %}

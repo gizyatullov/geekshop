@@ -1,8 +1,14 @@
+from datetime import datetime
+
+import pytz
 from django.contrib.auth.forms import AuthenticationForm, UserChangeForm, UserCreationForm
 from django import forms
 from django.core.exceptions import ValidationError
+import hashlib
+import random
+from django.conf import settings
 
-from .models import ShopUser
+from .models import ShopUser, ShopUserProfile
 
 
 class ShopUserLoginForm(AuthenticationForm):
@@ -39,6 +45,19 @@ class ShopUserRegisterForm(UserCreationForm):
             field.widget.attrs['class'] = 'form-control'
             field.help_text = ''
 
+    def save(self, *args, **kwargs):
+        user = super().save(*args, **kwargs)
+
+        user.is_active = False
+
+        # salt = hashlib.sha1(str(random.random()).encode('utf-8')).hexdigest()[:6]
+        # user.activation_key = hashlib.sha1((user.email + salt).encode('utf-8')).hexdigest()
+
+        user.activation_key = hashlib.sha1(user.email.encode('utf-8')).hexdigest()
+        user.activation_key_expires = datetime.now(pytz.timezone(settings.TIME_ZONE))
+        user.save()
+        return user
+
     def clean_age(self):
         data = self.cleaned_data['age']
         if data < 18:
@@ -50,11 +69,12 @@ class ShopUserRegisterForm(UserCreationForm):
         fields = (
             'username',
             'first_name',
-            'password1',
-            'password2',
+            'last_name',
             'email',
             'age',
             'avatar',
+            'password1',
+            'password2',
         )
 
 
@@ -79,3 +99,19 @@ class ShopUserEditForm(UserChangeForm):
                   'email',
                   'age',
                   'avatar')
+
+
+class ShopUserProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = ShopUserProfile
+        fields = (
+            'tagline',
+            'about_me',
+            'gender'
+        )
+
+    def __init__(self, *args, **kwargs):
+        super(ShopUserProfileEditForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+            field.help_text = ''

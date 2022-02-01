@@ -114,9 +114,9 @@ celerybeat.pid
 # Environments
 .env
 .venv
-env/
+.env/
 venv/
-ENV/
+.env/
 env.bak/
 venv.bak/
 
@@ -245,3 +245,11 @@ fabric.properties
 .idea
 db.sqlite3
 __pycache__/
+
+# geekshop --->
+
+temp
+
+# <--- geekshop
+
+env.json

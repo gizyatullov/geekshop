@@ -16,6 +16,13 @@ class ProductCategory(models.Model):
     def __str__(self):
         return self.name
 
+    def delete(self, using=None, keep_parents=False):
+        if self.is_active:
+            self.is_active = False
+        else:
+            self.is_active = True
+        self.save()
+
 
 class Product(models.Model):
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, verbose_name='категория')
@@ -34,6 +41,13 @@ class Product(models.Model):
 
     def __str__(self):
         return f'{self.name} ({self.category.name})'
+
+    def delete(self, using=None, keep_parents=False):
+        if self.is_active:
+            self.is_active = False
+        else:
+            self.is_active = True
+        self.save()
 
 
 class Contact(models.Model):
