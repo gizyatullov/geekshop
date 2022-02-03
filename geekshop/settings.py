@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'basketapp.apps.BasketappConfig',
     'adminapp.apps.AdminappConfig',
     'social_django.apps.PythonSocialAuthConfig',
+    'ordersapp.apps.OrdersappConfig',
 ]
 
 MIDDLEWARE = [
@@ -82,6 +83,7 @@ TEMPLATES = [
                 'mainapp.context_processors.basket',
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
+                'django.template.context_processors.media',
             ],
         },
     },

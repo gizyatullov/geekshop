@@ -43,3 +43,8 @@ class Basket(models.Model):
         all_baskets = Basket.objects.filter(user=self.user)
         total_price = sum(i.get_product_cost for i in all_baskets)
         return total_price
+
+    @staticmethod
+    def get_items(user):
+        baskets_user = Basket.objects.filter(user=user).order_by('product__category')
+        return baskets_user
