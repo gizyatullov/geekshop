@@ -1,10 +1,19 @@
 from django.db import models
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 
 from mainapp.models import Product
 
 
 # Create your models here.
+
+
+class BasketQuerySet(models.QuerySet):
+    def delete(self, *args, **kwargs):
+        for object in self:
+            object.product.quantity += object.quantity
+            object.product.save()
+        super(BasketQuerySet, self).delete(*args, **kwargs)
 
 
 class Basket(models.Model):
@@ -31,20 +40,39 @@ class Basket(models.Model):
         """
         return total quantity for user
         """
-        all_baskets = Basket.objects.filter(user=self.user)
-        total_quantity = sum(i.quantity for i in all_baskets)
-        return total_quantity
+        _all_baskets = Basket.objects.filter(user=self.user)
+        _total_quantity = sum(i.quantity for i in _all_baskets)
+        return _total_quantity
 
     @property
     def get_total_price(self):
         """
         return total cost for user
         """
-        all_baskets = Basket.objects.filter(user=self.user)
-        total_price = sum(i.get_product_cost for i in all_baskets)
-        return total_price
+        _all_baskets = Basket.objects.filter(user=self.user)
+        _total_price = sum(i.get_product_cost for i in _all_baskets)
+        return _total_price
 
     @staticmethod
     def get_items(user):
         baskets_user = Basket.objects.filter(user=user).order_by('product__category')
         return baskets_user
+
+    @staticmethod
+    def get_item(pk):
+        return get_object_or_404(Basket, pk=pk)
+
+    # Object's saving method
+    def save(self, *args, **kwargs):
+        if self.pk:
+            self.product.quantity -= self.quantity - self.__class__.get_item(self.pk).quantity
+        else:
+            self.product.quantity -= self.quantity
+        self.product.save()
+        super(self.__class__, self).save(*args, **kwargs)
+
+    # Object's deleting method
+    def delete(self):
+        self.product.quantity += self.quantity
+        self.product.save()
+        super(self.__class__, self).delete()
