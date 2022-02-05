@@ -28,6 +28,7 @@ urlpatterns = [
     re_path(r'^auth/', include('authnapp.urls', namespace='auth')),
     re_path(r'^basket/', include('basketapp.urls', namespace='basket')),
     re_path(r'^admin/', include('adminapp.urls', namespace='admin')),
+    re_path(r'^order/', include('ordersapp.urls', namespace='order')),
 ]
 
 if settings.DEBUG:

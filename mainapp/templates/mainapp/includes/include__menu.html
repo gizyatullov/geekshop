@@ -18,9 +18,19 @@
         </li>
         {% if user.is_authenticated %}
             <li>
-                <a href="{% url 'auth:edit' %}">
-                    {{ user.first_name|default:'Пользователь' }}
-                </a>
+                <div class="dropdown">
+                    <a class="dropdown-toggle" href="{% url 'auth:edit' %}" data-toggle="dropdown"
+                       id="dropdownMenuButton"
+                       aria-haspopup="true"
+                       aria-expanded="false">
+                        {{ user.first_name|default:'Пользователь' }}
+                        <span class="caret"></span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="{% url 'auth:edit' %}">{{ "профиль"|upper }}</a>
+                        <a class="dropdown-item" href="{% url 'order:orders_list' %}">{{ "Кабинет заказов"|upper }}</a>
+                    </div>
+                </div>
             </li>
         {% endif %}
 
@@ -42,10 +52,10 @@
     <a class="basket" href="{% url 'basket:view' %}">
         {% if basket %}
             <span>
-            {{ basket.0.get_total_price }}&nbsp;&#8381;
+            {{ basket.first.get_total_price }}&nbsp;&#8381;
             </span>
             <span>
-            {{ basket.0.get_total_quantity|floatformat:0 }}&nbsp;шт.
+            {{ basket.first.get_total_quantity|floatformat:0 }}&nbsp;шт.
             </span>
         {% endif %}
     </a>
