@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 
 from mainapp.models import Product
 
@@ -39,11 +40,7 @@ class Order(models.Model):
 
     def get_total_quantity(self):
         items = self.orderitems.select_related()
-        try:
-            result = sum(map(lambda i: i.quantity, items))
-        except Exception as e:
-            print(f'Ошибка в 43 строке модуля {__name__}')
-        return result
+        return sum(list(map(lambda x: x.quantity, items)))
 
     def get_product_type_quantity(self):
         items = self.orderitems.select_related()
@@ -51,11 +48,7 @@ class Order(models.Model):
 
     def get_total_cost(self):
         items = self.orderitems.select_related()
-        try:
-            result = sum(map(lambda i: i.quantity * i.product.price, items))
-        except Exception:
-            print(f'Ошибка в 55 строке модуля {__name__}')
-        return result
+        return sum(list(map(lambda x: x.quantity * x.product.price, items)))
 
     def delete(self):
         for item in self.orderitems.select_related():
@@ -72,8 +65,8 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField(verbose_name='количество', default=0)
 
     def get_product_cost(self):
-        try:
-            result = self.product.price * self.quantity
-        except Exception:
-            print(f'Ошибка в 76 строке модуля {__name__}')
-        return result
+        return self.product.price * self.quantity
+
+    @staticmethod
+    def get_item(pk):
+        return get_object_or_404(OrderItem, pk=pk)
