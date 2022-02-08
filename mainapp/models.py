@@ -49,6 +49,10 @@ class Product(models.Model):
             self.is_active = True
         self.save()
 
+    @staticmethod
+    def get_items():
+        return Product.objects.filter(is_active=True).order_by('category', 'name')
+
 
 class Contact(models.Model):
     phone = models.CharField(max_length=50, verbose_name="номер телефона")
