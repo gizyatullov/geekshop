@@ -4,7 +4,6 @@ from django.urls import reverse
 from django.conf import settings
 from django.contrib import messages
 from django.db import transaction
-from django.contrib.auth.decorators import login_required
 
 from authnapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEditForm, ShopUserProfileEditForm
 from .models import ShopUser
@@ -67,7 +66,6 @@ def register(request):
     return render(request, 'authnapp/register.html', context=context)
 
 
-@login_required
 @transaction.atomic
 def edit(request):
     if request.method == 'POST':

@@ -6,7 +6,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.views.generic import ListView
 
 from mainapp.models import Product, ProductCategory, Contact
-from .services import get_hot_product, get_same_products, get_hot_product_list
+from .services import get_hot_product, get_same_products
 
 
 # Create your views here.
@@ -81,9 +81,8 @@ def products(request, pk=None, page=1):
 
         return render(request, 'mainapp/products_list.html', context=context)
 
-    # hot_product = get_hot_product()
-    # same_products = get_same_products(hot_product)
-    hot_product, same_products = get_hot_product_list()
+    hot_product = get_hot_product()
+    same_products = get_same_products(hot_product)
 
     context = {
         'page_title': page_title,
