@@ -1,12 +1,14 @@
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.conf import settings
+from django.core.cache import cache
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.views.generic import ListView
 
 from mainapp.models import Product, ProductCategory, Contact
-from .services import get_hot_product, get_same_products
+from .services import get_hot_product, get_same_products, Fact, get_links_menu, get_products_orederd_by_price, \
+    get_category, get_products_in_category_orederd_by_price, get_hot_product_list, get_product
 
 
 # Create your views here.
@@ -17,6 +19,7 @@ def main(request):
         'page_title': 'Магазин - Главная',
         'products': Product.objects.filter(is_active=True, category__is_active=True)[:3],
         'media_url': settings.MEDIA_URL,
+        'fact': Fact(),
     }
 
     return render(request, 'mainapp/index.html', context=context)
@@ -51,16 +54,20 @@ class ProductsListView(ListView):
 
 def products(request, pk=None, page=1):
     page_title = 'Каталог - Продукты'
-    links_menu = ProductCategory.objects.filter(is_active=True)
+    # links_menu = ProductCategory.objects.filter(is_active=True)
+    links_menu = get_links_menu()
 
     if pk is not None:
-        if pk == '0':
-            products = Product.objects.filter(is_active=True, category__is_active=True).order_by('price')
+        if str(pk) == '0':
+            # products = Product.objects.filter(is_active=True, category__is_active=True).order_by('price')
+            products = get_products_orederd_by_price()
             category = {'name': 'все', 'pk': 0}
         else:
-            category = get_object_or_404(ProductCategory, pk=pk)
-            products = Product.objects.filter(category__pk=pk, is_active=True, category__is_active=True).order_by(
-                'price')
+            # category = get_object_or_404(ProductCategory, pk=pk)
+            category = get_category(pk)
+            # products = Product.objects.filter(category__pk=pk, is_active=True, category__is_active=True).order_by(
+            #     'price')
+            products = get_products_in_category_orederd_by_price(pk)
 
         paginator = Paginator(products, 2)
 
@@ -81,8 +88,9 @@ def products(request, pk=None, page=1):
 
         return render(request, 'mainapp/products_list.html', context=context)
 
-    hot_product = get_hot_product()
-    same_products = get_same_products(hot_product)
+    # hot_product = get_hot_product()
+    # same_products = get_same_products(hot_product)
+    hot_product, same_products = get_hot_product_list()
 
     context = {
         'page_title': page_title,
@@ -96,11 +104,17 @@ def products(request, pk=None, page=1):
 
 
 def product(request, pk):
-    prod = get_object_or_404(Product, pk=pk)
+    # prod = get_object_or_404(Product, pk=pk)
+    # context = {
+    #     'page_title': prod.name,
+    #     'link_menu': ProductCategory.objects.all(),
+    #     'product': prod,
+    #     'media_url': settings.MEDIA_URL,
+    # }
     context = {
-        'page_title': prod.name,
-        'link_menu': ProductCategory.objects.all(),
-        'product': prod,
+        'page_title': 'продукты',
+        'link_menu': get_links_menu(),
+        'product': get_product(pk),
         'media_url': settings.MEDIA_URL,
     }
 
