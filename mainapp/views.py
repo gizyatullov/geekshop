@@ -5,6 +5,7 @@ from django.core.cache import cache
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.views.generic import ListView
+from django.views.decorators.cache import cache_page
 
 from mainapp.models import Product, ProductCategory, Contact
 from .services import get_hot_product, get_same_products, Fact, get_links_menu, get_products_orederd_by_price, \
@@ -121,6 +122,7 @@ def product(request, pk):
     return render(request, 'mainapp/product.html', context=context)
 
 
+@cache_page(600)
 def contact(request):
     context = {
         'page_title': 'Контакты - О нас',
