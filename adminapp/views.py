@@ -8,6 +8,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import F
 
 from authnapp.models import ShopUser
 from mainapp.models import ProductCategory, Product
@@ -111,6 +112,7 @@ class ProductCategoryCreateView(LoginRequiredMixin, CreateView):
 class ProductCategoryUpdateView(LoginRequiredMixin, UpdateView):
     model = ProductCategory
     template_name = 'adminapp/category_update.html'
+    success_url = reverse_lazy('admin:categories')
     form_class = ProductCategoryEditForm
 
     def get_context_data(self, **kwargs):
@@ -121,6 +123,15 @@ class ProductCategoryUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('admin:category_update', args=[self.kwargs.get('pk')])
+
+    def form_valid(self, form):
+        if 'discount' in form.cleaned_data:
+            discount = form.cleaned_data['discount']
+            if discount:
+                # print(f'применяется скидка {discount}% к товарам категории {self.object.name}')
+                self.object.product_set.update(price=F('price') * (1 - discount / 100))
+
+        return super().form_valid(form)
 
 
 class ProductCategoryDeleteView(LoginRequiredMixin, DeleteView):
