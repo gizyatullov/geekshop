@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.shortcuts import get_object_or_404
+from django.utils.functional import cached_property
 
 from mainapp.models import Product
 
@@ -49,6 +50,10 @@ class Basket(models.Model):
     def get_items(user):
         baskets_user = Basket.objects.filter(user=user).order_by('product__category')
         return baskets_user
+
+    @cached_property
+    def get_items_cached(self):
+        return self.user.basket.select_related()
 
     @staticmethod
     def get_item(pk):
