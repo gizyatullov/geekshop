@@ -54,6 +54,6 @@ class ProductsTestCase(TestCase):
         product_3 = Product.objects.get(name='комфорт 2')
 
         products_as_class_method = set(product_1.get_items())
-        products = set(product_1, product_3)
+        products = set([product_1, product_3])
 
         self.assertIsNotNone(products_as_class_method.intersection(products))

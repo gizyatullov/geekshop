@@ -18,7 +18,7 @@ class TestUserManagement(TestCase):
         self.superuser = ShopUser.objects.create_superuser(username='django', password='django')
         self.user = ShopUser.objects.create_user(username='varick', password='varick')
         self.user_with__first_name = ShopUser.objects.create_user(
-            username='james-bond', password='bond', first_name='bond'
+            username='james-bond', password='bond-007', first_name='bond'
         )
 
     def test_user_login(self):
@@ -43,7 +43,7 @@ class TestUserManagement(TestCase):
         self.assertEqual(response.context['user'], self.user)
 
     # def test_user_with__first_name_login(self):
-    #     self.client.login(username='james-bond', password='bond')
+    #     self.client.login(username='james-bond', password='bond-007')
     #
     #     self.client.get('/auth/login/')
     #
