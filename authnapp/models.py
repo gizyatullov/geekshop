@@ -14,7 +14,7 @@ from django.db.models.signals import post_save
 
 
 class ShopUser(AbstractUser):
-    email = models.EmailField(verbose_name='email', unique=True, db_index=True)
+    email = models.EmailField(verbose_name='email', blank=True, db_index=True)
     avatar = models.ImageField(upload_to="users_avatars", blank=True)
     age = models.PositiveSmallIntegerField(verbose_name="возраст", default=99)
     activation_key = models.CharField(max_length=128, null=True, blank=True, verbose_name='ключ подтверждения')
