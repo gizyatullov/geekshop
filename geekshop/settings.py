@@ -161,7 +161,7 @@ else:
 
 LANGUAGE_CODE = 'ru-ru'
 
-TIME_ZONE = 'Europe/Moscow'
+TIME_ZONE = 'Europe/Samara'
 
 USE_I18N = True
 
